@@ -1,0 +1,36 @@
+{
+  "name": "stylelint-declaration-block-order",
+  "version": "0.1.0",
+  "description": "Stylelint plugin which specifies the order of content within declaration blocks.",
+  "keywords": [
+    "stylelint-plugin",
+    "stylelint",
+    "css",
+    "order"
+  ],
+  "author": "Aleks Hudochenkov <aleks@hudochenkov.com>",
+  "license": "MIT",
+  "repository": "hudochenkov/stylelint-declaration-block-order",
+  "bugs": {
+    "url": "https://github.com/hudochenkov/stylelint-declaration-block-order/issues"
+  },
+  "homepage": "https://github.com/hudochenkov/stylelint-declaration-block-order",
+  "engines": {
+    "node": ">=4"
+  },
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "lodash": "^4.16.2",
+    "stylelint": "^7.3.1"
+  },
+  "devDependencies": {
+    "ava": "^0.16.0",
+    "eslint": "^3.6.1"
+  },
+  "scripts": {
+    "pretest": "eslint index.js test/*.js",
+    "test": "ava test/{index,validate-options}.js"
+  }
+}

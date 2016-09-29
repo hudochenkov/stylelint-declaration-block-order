@@ -1,6 +1,6 @@
 'use strict';
 
-const testRule = require('./testRule');
+const testRule = require('stylelint-test-rule-ava');
 const declarationBlockOrder = require('..');
 
 const ruleName = declarationBlockOrder.ruleName;

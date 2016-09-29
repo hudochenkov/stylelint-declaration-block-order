@@ -27,7 +27,8 @@
   },
   "devDependencies": {
     "ava": "^0.16.0",
-    "eslint": "^3.6.1"
+    "eslint": "^3.6.1",
+    "stylelint-test-rule-ava": "^0.1.0"
   },
   "scripts": {
     "pretest": "eslint index.js test/*.js",

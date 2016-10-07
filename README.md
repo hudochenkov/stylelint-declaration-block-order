@@ -189,7 +189,7 @@ Given:
 
 The following patterns are considered warnings:
 
-```css
+```scss
 a {
 	@include hello {
 		display: block;
@@ -198,7 +198,7 @@ a {
 }
 ```
 
-```css
+```scss
 a {
 	@extend .something;
 	@media (min-width: 10px) {
@@ -209,7 +209,7 @@ a {
 
 The following patterns are _not_ considered warnings:
 
-```css
+```scss
 a {
 	@include hello;
 	@include hello {
@@ -222,7 +222,7 @@ a {
 }
 ```
 
-```css
+```scss
 a {
 	@include hello {
 		display: block;

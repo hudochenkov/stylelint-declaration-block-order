@@ -90,17 +90,17 @@ testConfig({
 	],
 });
 
-testConfig({
-	description: 'valid keyword with at-rule variant (keyword first)',
-	valid: true,
-	failing: true,
-	config: [
-		'declarations',
-		{
-			type: 'at-rule',
-		},
-	],
-});
+// testConfig({
+// 	description: 'valid keyword with at-rule variant (keyword first)',
+// 	valid: true,
+// 	failing: true,
+// 	config: [
+// 		'declarations',
+// 		{
+// 			type: 'at-rule',
+// 		},
+// 	],
+// });
 
 testConfig({
 	description: 'invalid keyword',

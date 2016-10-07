@@ -134,6 +134,17 @@ testRule(declarationBlockOrder.rule, {
 		{
 			type: 'at-rule',
 			name: 'include',
+			parameter: 'media',
+			hasBlock: true
+		},
+		{
+			type: 'at-rule',
+			name: 'include',
+			parameter: 'media'
+		},
+		{
+			type: 'at-rule',
+			name: 'include',
 			hasBlock: true
 		},
 		{
@@ -154,6 +165,10 @@ testRule(declarationBlockOrder.rule, {
 		{
 			code: `
 				a {
+					@include media('palm') {
+						display: block;
+					}
+					@include media('desk');
 					@include hello {
 						display: block;
 					}
@@ -185,6 +200,18 @@ testRule(declarationBlockOrder.rule, {
 						display: none;
 					}
 					@include hello {
+						display: block;
+					}
+				}
+			`,
+		},
+		{
+			code: `
+				a {
+					@mixin hiya {
+						display: none;
+					}
+					@include media('palm') {
 						display: block;
 					}
 				}
@@ -227,6 +254,17 @@ testRule(declarationBlockOrder.rule, {
 			type: 'at-rule',
 			hasBlock: true
 		},
+		{
+			type: 'at-rule',
+			name: 'include',
+			parameter: 'media'
+		},
+		{
+			type: 'at-rule',
+			name: 'include',
+			parameter: 'media',
+			hasBlock: true
+		},
 	]],
 	skipBasicChecks: true,
 
@@ -242,6 +280,10 @@ testRule(declarationBlockOrder.rule, {
 						display: none;
 					}
 					@extend .something;
+					@include media('desk');
+					@include media('palm') {
+						display: block;
+					}
 				}
 			`,
 		},
@@ -283,6 +325,28 @@ testRule(declarationBlockOrder.rule, {
 					@extend .something;
 					@include hello {
 						display: block;
+					}
+				}
+			`,
+		},
+		{
+			code: `
+				a {
+					@include media('palm') {
+						display: block;
+					}
+					@include media('desk');
+				}
+			`,
+		},
+		{
+			code: `
+				a {
+					@include media('palm') {
+						display: block;
+					}
+					@mixin media('palm') {
+						color: red;
 					}
 				}
 			`,

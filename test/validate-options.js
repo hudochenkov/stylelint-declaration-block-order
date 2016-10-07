@@ -158,3 +158,65 @@ testConfig({
 	],
 	message: 'Invalid option "[{"type":"at-rule","hasBlock":true,"name":""}]" for rule plugin/declaration-block-order',
 });
+
+testConfig({
+	description: 'valid parameter (string) and name',
+	valid: true,
+	config: [
+		{
+			type: 'at-rule',
+			name: 'include',
+			parameter: 'media'
+		},
+	],
+});
+
+testConfig({
+	description: 'valid parameter (RegExp) and name',
+	valid: true,
+	config: [
+		{
+			type: 'at-rule',
+			name: 'include',
+			parameter: /$media/
+		},
+	],
+});
+
+testConfig({
+	description: 'invalid. parameter is empty',
+	valid: false,
+	config: [
+		{
+			type: 'at-rule',
+			name: 'include',
+			parameter: ''
+		},
+	],
+	message: 'Invalid option "[{"type":"at-rule","name":"include","parameter":""}]" for rule plugin/declaration-block-order',
+});
+
+testConfig({
+	description: 'invalid. parameter is not a string',
+	valid: false,
+	config: [
+		{
+			type: 'at-rule',
+			name: 'include',
+			parameter: null
+		},
+	],
+	message: 'Invalid option "[{"type":"at-rule","name":"include","parameter":null}]" for rule plugin/declaration-block-order',
+});
+
+testConfig({
+	description: 'invalid. parameter without "name" property',
+	valid: false,
+	config: [
+		{
+			type: 'at-rule',
+			parameter: 'media'
+		},
+	],
+	message: 'Invalid option "[{"type":"at-rule","parameter":"media"}]" for rule plugin/declaration-block-order',
+});

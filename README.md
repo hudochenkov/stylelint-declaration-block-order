@@ -57,11 +57,21 @@ Within an order array, you can include:
 	{
 		type: 'at-rule',
 		name: 'include',
+		parameter: 'hello',
 		hasBlock: true
 	}
 	```
 
 Extended at-rules objects have different parameters and variations.
+
+Object parameters:
+
+* `type`: always `"at-rule"`
+* `name`: `string`. E. g., `name: "include"` for `@include`
+* `parameter`: `string`|`regex`. A string will be translated into a RegExp — `new RegExp(yourString)` — so _be sure to escape properly_. E. g., `parameter: "icon"` for `@include icon(20px);`
+* `hasBlock`: `boolean`. E. g., `hasBlock: true` for `@include icon { color: red; }` and not for `@include icon;`
+
+Always specify `name` if `parameter` is specified.
 
 Matches all at-rules:
 
@@ -97,6 +107,27 @@ Matches all at-rules with specific name, which have nested elements:
 {
 	type: 'at-rule',
 	name: 'media',
+	hasBlock: true
+}
+```
+
+Matches all at-rules with specific name and parameter:
+
+```js
+{
+	type: 'at-rule',
+	name: 'include',
+	parameter: 'icon'
+}
+```
+
+Matches all at-rules with specific name and parameter, which have nested elements:
+
+```js
+{
+	type: 'at-rule',
+	name: 'include',
+	parameter: 'icon',
 	hasBlock: true
 }
 ```
@@ -228,6 +259,77 @@ a {
 		display: block;
 	}
 	@extend .something;
+}
+```
+
+---
+
+Given:
+
+```js
+[
+	{
+		type: 'at-rule',
+		name: 'include',
+		hasBlock: true
+	},
+	{
+		type: 'at-rule',
+		name: 'include',
+		parameter: 'icon',
+		hasBlock: true
+	},
+	{
+		type: 'at-rule',
+		name: 'include',
+		parameter: 'icon'
+	}
+]
+```
+
+The following patterns are considered warnings:
+
+```scss
+a {
+	@include icon {
+		display: block;
+	}
+	@include hello {
+		display: none;
+	}
+	@include icon;
+}
+```
+
+```scss
+a {
+	@include icon;
+	@include icon {
+		display: block;
+	}
+}
+```
+
+The following patterns are _not_ considered warnings:
+
+```scss
+a {
+	@include hello {
+		display: none;
+	}
+	@include icon {
+		display: block;
+	}
+	@include icon;
+}
+```
+
+```scss
+a {
+	@include hello {
+		display: none;
+	}
+	@include icon;
 }
 ```
 

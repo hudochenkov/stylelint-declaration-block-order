@@ -192,6 +192,14 @@ function createExpectedOrder(input) {
 				nodeData.name = item.name;
 			}
 
+			if (item.parameter) {
+				nodeData.parameter = item.parameter;
+
+				if (_.isString(item.parameter)) {
+					nodeData.parameter = new RegExp(item.parameter);
+				}
+			}
+
 			if (item.hasBlock) {
 				nodeData.hasBlock = item.hasBlock;
 			}
@@ -217,6 +225,10 @@ function getDescription(item) {
 
 		if (item.name) {
 			text = `@${item.name}`;
+		}
+
+		if (item.parameter) {
+			text += ` "${item.parameter}"`;
 		}
 
 		if (item.hasOwnProperty('hasBlock')) {
@@ -258,6 +270,10 @@ function getOrderData(expectedOrder, node) {
 			nodeType.hasBlock = true;
 		}
 
+		if (node.params && node.params.length) {
+			nodeType.parameter = node.params;
+		}
+
 		const atRules = expectedOrder['at-rule'];
 
 		// Looking for most specified pattern, because it can match many patterns
@@ -293,31 +309,49 @@ function getOrderData(expectedOrder, node) {
 function calcPatternPriority(pattern, node) {
 	// 0 — it pattern doesn't match
 	// 1 — pattern without `name` and `hasBlock`
-	// 1010 — pattern match `hasBlock`
-	// 1100 — pattern match `name`
-	// 2110 — pattern match `name` and `hasBlock`
+	// 10010 — pattern match `hasBlock`
+	// 10100 — pattern match `name`
+	// 20110 — pattern match `name` and `hasBlock`
+	// 21100 — patter match `name` and `parameter`
+	// 31110 — patter match `name`, `parameter`, and `hasBlock`
 
 	let priority = 0;
 
 	// match `hasBlock`
 	if (pattern.hasOwnProperty('hasBlock') && node.hasBlock === pattern.hasBlock) {
 		priority += 10;
-		priority += 1000;
+		priority += 10000;
 	}
 
 	// match `name`
 	if (pattern.hasOwnProperty('name') && node.name === pattern.name) {
 		priority += 100;
-		priority += 1000;
+		priority += 10000;
 	}
 
-	// dosn't have `name` and `hasBlock`
-	if (!pattern.hasOwnProperty('hasBlock') && !pattern.hasOwnProperty('name')) {
+	// match `name`
+	if (pattern.hasOwnProperty('parameter') && pattern.parameter.test(node.parameter)) {
+		priority += 1100;
+		priority += 10000;
+	}
+
+	// doesn't have `name` and `hasBlock`
+	if (!pattern.hasOwnProperty('hasBlock') && !pattern.hasOwnProperty('name') && !pattern.hasOwnProperty('paremeter')) {
 		priority = 1;
 	}
 
 	// patter has `name` and `hasBlock`, but it doesn't match both properties
-	if (pattern.hasOwnProperty('hasBlock') && pattern.hasOwnProperty('name') && priority < 2000) {
+	if (pattern.hasOwnProperty('hasBlock') && pattern.hasOwnProperty('name') && priority < 20000) {
+		priority = 0;
+	}
+
+	// patter has `name` and `parameter`, but it doesn't match both properties
+	if (pattern.hasOwnProperty('name') && pattern.hasOwnProperty('parameter') && priority < 21100) {
+		priority = 0;
+	}
+
+	// patter has `name`, `parameter`, and `hasBlock`, but it doesn't match all properties
+	if (pattern.hasOwnProperty('name') && pattern.hasOwnProperty('parameter') && pattern.hasOwnProperty('hasBlock') && priority < 30000) {
 		priority = 0;
 	}
 
@@ -372,33 +406,30 @@ function validatePrimaryOption(actualOptions) {
 	const objectItems = actualOptions.filter(_.isPlainObject);
 
 	if (!objectItems.every((item) => {
-		// Check "type" property
+		let result = true;
+
 		if (item.type !== 'at-rule') {
 			return false;
 		}
 
-		// If node has "hasBlock" and "name" check them
-		if (!_.isUndefined(item.hasBlock) && !_.isUndefined(item.name)) {
-			if (item.hasBlock !== true && item.hasBlock !== false) {
-				return false;
-			}
-
-			if (!_.isString(item.name) || !item.name.length) {
-				return false;
-			}
-
-			return true;
+		// if parameter is specified, name should be specified also
+		if (!_.isUndefined(item.parameter) && _.isUndefined(item.name)) {
+			return false;
 		}
 
 		if (!_.isUndefined(item.hasBlock)) {
-			return item.hasBlock === true || item.hasBlock === false;
+			result = item.hasBlock === true || item.hasBlock === false;
 		}
 
 		if (!_.isUndefined(item.name)) {
-			return _.isString(item.name) && item.name.length;
+			result = _.isString(item.name) && item.name.length;
 		}
 
-		return true;
+		if (!_.isUndefined(item.parameter)) {
+			result = (_.isString(item.parameter) && item.parameter.length) || _.isRegExp(item.parameter);
+		}
+
+		return result;
 	})) {
 		return false;
 	}

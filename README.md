@@ -1,5 +1,7 @@
 # stylelint-declaration-block-order [![Build Status][ci-img]][ci]
 
+**DEPRECATED! The plugin was deprecated in favor of [`stylelint-order`](https://github.com/hudochenkov/stylelint-order).**
+
 [Stylelint] plugin which specifies the order of content within declaration blocks.
 
 For specifying declarations order use stylelint's [`declaration-block-properties-order`] rule.

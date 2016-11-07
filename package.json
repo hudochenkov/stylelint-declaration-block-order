@@ -1,7 +1,7 @@
 {
   "name": "stylelint-declaration-block-order",
   "version": "0.2.0",
-  "description": "Stylelint plugin which specifies the order of content within declaration blocks.",
+  "description": "DEPRECATED! Stylelint plugin which specifies the order of content within declaration blocks.",
   "keywords": [
     "stylelint-plugin",
     "stylelint",
